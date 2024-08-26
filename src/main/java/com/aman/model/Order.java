@@ -6,7 +6,6 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -29,8 +28,12 @@ import lombok.ToString;
 public class Order {
     private String ORDNAME;
     private String CURDATE;
-    private String TOTQUANT;
-
+    private String SUPNAME;
+    private String TQUANT;
+    private String PARTNAME;
+    private String COLINE;
+    private String BRANCHNAME;
+    
     public static boolean createXMLFile(String fileName, String path, List<Order> orders) {
         try {
             // Create DocumentBuilderFactory and DocumentBuilder
@@ -50,20 +53,48 @@ public class Order {
                 Element lineElement = document.createElement("Line");
                 root.appendChild(lineElement);
 
+                Element itemElement = document.createElement("Item");
+                lineElement.appendChild(itemElement);
+
                 // Add ordName element
-                Element ordNameElement = document.createElement("ordName");
-                ordNameElement.appendChild(document.createTextNode(order.getORDNAME()));
-                lineElement.appendChild(ordNameElement);
+                Element CUNOElement = document.createElement("CUNO");
+                String supName = order.getSUPNAME() != null ? order.getSUPNAME() : "";
+                CUNOElement.appendChild(document.createTextNode(supName));
+                itemElement.appendChild(CUNOElement);
 
-                // Add curDate element
-                Element curDateElement = document.createElement("curDate");
-                curDateElement.appendChild(document.createTextNode(order.getCURDATE()));
-                lineElement.appendChild(curDateElement);
+                // Add ordName element
+                Element CUORElement = document.createElement("CUOR");
+                String ordName = order.getORDNAME() != null ? order.getORDNAME() : "";
+                CUORElement.appendChild(document.createTextNode(ordName));
+                itemElement.appendChild(CUORElement);
 
-                // Add totQuant element
-                Element totQuantElement = document.createElement("totQuant");
-                totQuantElement.appendChild(document.createTextNode(String.valueOf(order.getTOTQUANT())));
-                lineElement.appendChild(totQuantElement);
+                // Add ordName element
+                Element CUPOElement = document.createElement("CUPO");
+                String coLine = order.getCOLINE() != null ? order.getCOLINE() : "";
+                CUPOElement.appendChild(document.createTextNode(coLine));
+                itemElement.appendChild(CUPOElement);
+
+                Element POPNElement = document.createElement("POPN");
+                String partName = order.getPARTNAME() != null ? order.getPARTNAME() : "";
+                POPNElement.appendChild(document.createTextNode(partName));
+                itemElement.appendChild(POPNElement);
+
+                Element ORDTElement = document.createElement("ORDT");
+                String curDate = order.getCURDATE() != null ? order.getCURDATE() : "";
+                ORDTElement.appendChild(document.createTextNode(curDate));
+                itemElement.appendChild(ORDTElement);
+
+                Element ADIDElement = document.createElement("ADID");
+                String branchName = order.getBRANCHNAME() != null ? order.getBRANCHNAME() : "";
+                ADIDElement.appendChild(document.createTextNode(branchName));
+                itemElement.appendChild(ADIDElement);
+
+                Element QuantityElement = document.createElement("Quantity");
+                String tQuant = order.getTQUANT() != null ? order.getTQUANT() : "";
+                QuantityElement.appendChild(document.createTextNode(tQuant));
+                itemElement.appendChild(QuantityElement);
+
+                
 
                 // Add any other elements you need here, following the same pattern
             }
